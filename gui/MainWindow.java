@@ -256,6 +256,11 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         menuShowPrimes.setText("Show P & Q");
+        menuShowPrimes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuShowPrimesActionPerformed(evt);
+            }
+        });
         menuSettingsButton.add(menuShowPrimes);
 
         menuShowKeys.setText("Show Keys");
@@ -424,10 +429,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_menuQuitActionPerformed
 
     private void menuSettingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSettingsButtonActionPerformed
-        dialogShowPrimes.setVisible(true);
-        dialogShowPrimes.setBounds(0, 0, 100, 200);
-        String seeds= "p=" + encrypt.getKeySeeds()[0].toString() + "<br />q=" + encrypt.getKeySeeds()[1].toString();
-        primesDialog.setText(seeds);
+
     }//GEN-LAST:event_menuSettingsButtonActionPerformed
 
     private void menuShowKeysActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuShowKeysActionPerformed
@@ -457,6 +459,13 @@ public class MainWindow extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_menuImportKeysActionPerformed
+
+    private void menuShowPrimesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuShowPrimesActionPerformed
+        dialogShowPrimes.setVisible(true);
+        dialogShowPrimes.setBounds(0, 0, 100, 200);
+        String seeds= "p=" + encrypt.getKeySeeds()[0].toString() + "<br />q=" + encrypt.getKeySeeds()[1].toString();
+        primesDialog.setText(seeds);
+    }//GEN-LAST:event_menuShowPrimesActionPerformed
 
     /**
      * @param args the command line arguments

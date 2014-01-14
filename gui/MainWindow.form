@@ -154,6 +154,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Show P &amp; Q"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuShowPrimesActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuShowKeys">
               <Properties>
