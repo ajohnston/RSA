@@ -18,7 +18,8 @@ public class OAEPEncodingEngine {
         return octetString;
     }
     
-    public Integer OS2IP() {
-        return new Integer(4);
+    public Integer OS2IP(String octetString) {
+        int octet = Integer.parseInt(octetString);
+        return octet;
     }
 }
