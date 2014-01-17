@@ -32,13 +32,13 @@ public class OAEPEncodingEngine {
         return octet;
     }
     
-    public static String encode(String message, String param, int emLen) {
+    public static String encode(String message, String param, int emLen) throws IllegalArgumentException {
         SecureRandom rndGenerator = new SecureRandom();
         if (param.getBytes().length > (Math.pow(2,64) - 1)/8) {
-            return "Parameter string too long";
+            throw new IllegalArgumentException("Parameter string too long");
         }
         else if (param.getBytes().length > emLen - 2*HASH_LENGTH - 1) {
-            return "Message too long";
+            throw new IllegalArgumentException("Message too long");
         }
         String ps    = null; //Placeholder. Should be an octet string of len emLen - mLen - 2hlen - 1
         String pHash = OAEPEncodingEngine.hash(param);
@@ -54,9 +54,31 @@ public class OAEPEncodingEngine {
         return EM;
         
     }
-    
-    public static String decode(String message, String param) {
-        
+   //Change Return type to String 
+    public static String decode(String message, String param) throws IllegalArgumentException{
+        if (param.length() > (Math.pow(2,64) -1)/8) {
+            throw new  IllegalArgumentException("Decoding Error");
+        }
+        //This code might be wrong. Should be len of msg in bytes
+        int emLen = OAEPEncodingEngine.I2OSP(message.length(), 4).length();
+        if (emLen < 2*HASH_LENGTH+1) {
+            throw new IllegalArgumentException("Decoding Error");
+        }
+        String maskedSeed = Arrays.copyOfRange(message.toCharArray(), 0, HASH_LENGTH).toString();
+        String maskedDB = Arrays.copyOfRange(message.toCharArray(), HASH_LENGTH, message.length()).toString();
+        String seedMask = OAEPEncodingEngine.maskGeneration(maskedDB, HASH_LENGTH);
+        String seed = null; //Should be maskedSeed XOR seedMask
+        String dbMask = OAEPEncodingEngine.maskGeneration(seed, emLen - HASH_LENGTH);
+        String DB = null; //Should be maskedDB XOR dbMask
+        String pHash = OAEPEncodingEngine.hash(param);
+        String pHashPrime = pHash.substring(0, HASH_LENGTH);
+        //DB Should match the following regex: pHashPrime(PS)?01(Message)
+        //If not, set pHashPrime to zeros to avoid chosen plaintext vuln
+        String decodedMessage = null; 
+        if (!(pHashPrime.equals(pHash))) {
+            throw new IllegalArgumentException("Decoding Error");
+        }
+        return decodedMessage;
     }
     
     private static String maskGeneration(String z, int len) {
