@@ -403,7 +403,7 @@ public class MainWindow extends javax.swing.JFrame {
             File openfile = fc.getSelectedFile();
             String message = FileHelper.readFile(openfile);
             BigInteger[] encrypted = encrypt.encrypt(message);
-            String save = openfile.getAbsolutePath() + ".rsa";
+            String save = openfile.getAbsolutePath() + ".enc";
             FileHelper.writeEncryptedFile(encrypted, save);
             JOptionPane.showMessageDialog(null,"Saved to file " + save,"Saved File",JOptionPane.WARNING_MESSAGE);
         }
@@ -418,7 +418,8 @@ public class MainWindow extends javax.swing.JFrame {
             BigInteger[] encrypted = FileHelper.readFileToArray(openfile);
             String decrypted = encrypt.decrypt(encrypted);
             String save = openfile.getAbsolutePath();
-            save = save.replace(".rsa$", save);
+            save = save.replace(".enc$", save);
+            save = save + ".dec";
             FileHelper.writeEncryptedFile(encrypted, save);
             JOptionPane.showMessageDialog(null,"Saved to file " + save,"Saved File",JOptionPane.WARNING_MESSAGE);
         }
