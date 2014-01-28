@@ -1,0 +1,77 @@
+package rsa;
+import java.math.BigInteger;
+
+/**
+ * <code>RSAWrapper</code> implements <code>RSAKeyGenerator</code> and 
+ * provides encryption and decryption services
+ * 
+ * <br /><strong>TODO:</strong>Implement padding scheme and encrypt/decrypt functions
+ * @version 0.01
+ * @author Andrew H. Johnston
+ */
+public class RSAWrapper {
+    
+    BigInteger keys[] = new BigInteger[3];
+    
+    
+    public RSAWrapper() {
+        RSAKeyGenerator keygen = new RSAKeyGenerator();
+        keys = keygen.getKeys(1024);
+        
+    }
+    
+    public RSAWrapper(BigInteger n, BigInteger e, BigInteger d) {
+        this.setKeys(n, e, d);
+    }
+    
+    public BigInteger[] getKeys() {
+        return keys;
+    }
+    
+    public void setKeys(BigInteger n, BigInteger e, BigInteger d) {
+        keys[0] = n;
+        keys[1] = e;
+        keys[2] = d;
+    }
+    //Is this right? Shouldn't it return a string?
+    //Optional: toCharArray() encryption
+    public BigInteger encrypt(String message) {
+        BigInteger m; //Padded Message
+        m = this.padMessage(message);
+        BigInteger encrypted;
+        BigInteger n = keys[0];
+        BigInteger e = keys[1];
+        //Pad the message
+        encrypted = m.modPow(e,n);
+        return encrypted;
+    }
+    //Changed String to BigInteger to reflect the encrypt method
+    //Possibly: Chinese Remainder Theorum?
+    public String decrypt(BigInteger message) {
+        BigInteger n = keys[0];
+        BigInteger d = keys[2];
+        BigInteger padded;
+        BigInteger decrypted;
+        String unpadded;
+        padded = message.modPow(d, n);
+        unpadded = this.unpadMessage(padded);
+        return unpadded;
+    }
+    
+    //It might be a good idea to look into implementing 
+    //OAEP as the padding scheme provided there isn't a 
+    //more lightweight option
+    public BigInteger padMessage(String message) {
+        BigInteger padded;
+        //Pad the message
+        return padded;
+    }
+    
+    public String unpadMessage(BigInteger padded) {
+        String unpadded;
+        //Unpad the message
+        return unpadded;
+    }
+    
+    
+}

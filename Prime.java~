@@ -1,0 +1,62 @@
+/**
+ * Class to generate Prime numbers according to FIPS183-3 Appendix B.3.3
+ */
+import java.math.BigInteger;
+import java.util.Random;
+
+public class Prime {
+  
+  
+  /*
+   * Get base a for Fermat's Theorum
+   */
+  private BigInteger getRandomFermatBase(BigInteger n) {
+     while (true) {
+            final BigInteger a = new BigInteger (n.bitLength(), rand);
+            // must have 1 <= a < n
+            if (BigInteger.ONE.compareTo(a) <= 0 && a.compareTo(n) < 0)
+            {
+                return a;
+            }
+        }
+  }
+  /*
+   * Check if the number is prime using Fermat's Theorum
+   */
+  private  boolean checkPrime(BigInteger n, int maxIterations) {
+    if (n.equals(BigInteger.ONE)) {
+            return false;
+    }
+        for (int i = 0; i < maxIterations; i++)
+        {
+            BigInteger a = getRandomFermatBase(n);
+            a = a.modPow(n.subtract(BigInteger.ONE), n);
+
+            if (!a.equals(BigInteger.ONE)) {
+                return false;
+            }
+        }
+
+        return true;  
+  }
+    
+  /*
+   *Generate a prime, check that it's prime, and return to user
+   *@input int nlen The intended bit length of the modulus
+   *@input int e The public verification exponent
+   *@output int[] Two prime integers p and q. May have to change to BigInteger 
+   */
+  public BigInteger[] getPrime(int nlen, int e) {
+    //Ensure that the arguments meet the standard defined by FIPS183-3
+    if ((nlen != 2048) || (nlen != 3072)) {
+      throw new InvalidParameterException();
+    }
+    if ((e <= Math.pow(2,16)) || (e >= Math.pow(2,256))) {
+      throw new InvalidParameterException();
+    }
+    
+    
+  }
+  
+  
+}

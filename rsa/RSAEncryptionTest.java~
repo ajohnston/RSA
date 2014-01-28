@@ -1,0 +1,46 @@
+/**
+ * Auto Generated Java Class.
+ */
+import java.math.BigInteger;
+
+public class RSATest {
+  
+  static BigInteger global_keys = new BigInteger[3];
+    
+  public static void main(String[] args) { 
+    RSAWrapper keygen = new RSAWrapper();
+    BigInteger[] keys = new BigInteger[3];
+    global_keys = keys;
+    String message = "Hello World!";
+    BigInteger[] m = this.messageToBigInt(message);
+    BigInteger[] encrypted = this.encrypt(m);
+    BigInteger[] decrypted = this.decrypt(m);
+    String answer = this.bigIntToString(decrypted)
+    System.out.println("Original Message:" + message);
+    System.out.println("Decrypted Message:" + message);
+  }
+  
+  public BigInteger[] encrypt(BigInteger[] message) {
+    BigInteger [] c =new BigInteger[message.length()];
+    for (int i=0; i<c.length; i++){
+      c[i]=M[i].modPow(global_keys[1],global_keys[0]);
+    }
+    return c;
+  }
+  
+  public String decrypt(BigInteger[] c) {
+  
+  }
+  
+  public BigInteger[] messageToBigInt(String message) {
+    char mCharArray = message.toCharArray();
+    BigInteger[] m = new BigInteger[message.length];
+    //Convert chars to BigIntegers by casting into ints first
+    for (int i = 0; i < mCharArray.length; i++) {
+      //Cast and add to array in one move
+      m[i] = BigInteger.valueOf(((int) mCharArray[i]));
+    }
+    return m;
+  }
+  
+}

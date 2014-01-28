@@ -1,0 +1,92 @@
+/**
+ * Objects constructed from <code>RSAKeyGenerator</code> class create RSA keys by securely generating large 
+ * pseudorandom prime numbers.
+ * All prime numbers are tested against Fermat's Theorum to get better certainty that the number is in fact prime.
+ * FIPS183-3 was implemented as closely as possible to ensure secure and valid results.
+ * TODO: return keys in valid PKCS#1 v1.5 format for easier distribution/use
+ * @author  Andrew H. Johnston
+ * @version 0.01
+ */
+import java.security.SecureRandom;
+import java.math.BigInteger;
+
+public class RSAKeyGenerator {
+  final int FERMAT_MAX_ITERATIONS = 41; //Determined to be adequate for most secure standards according to FIPS 
+  final SecureRandom randomNumberGenerator = new SecureRandom();
+  //Generate keys using primes generated with pseudorandom numbers
+  public RSAKeyGenerator() {
+    //Default Constructor, no set up needed
+  }
+  
+  /*
+   * Secure generates RSA public and private keys.
+   * @param   bitlength Specifies the bitlength of the keys
+   * @returns keys[]    Where key[0] is n, key[1] is e, and key[2] is d
+   * TODO: Return keys in PKCS#1 v1.5 format
+   */ 
+  public BigInteger[] getKeys(int bitlength) {
+    boolean pNotPrime = true;
+    boolean qNotPrime = true;
+    BigInteger p = new BigInteger(bitlength, randomNumberGenerator);
+    BigInteger q = new BigInteger(bitlength, randomNumberGenerator);
+    //Generate p and q, the two primes
+    while (pNotPrime) {
+      p = BigInteger.probablePrime(bitlength, randomNumberGenerator);
+      pNotPrime = checkNotPrime(p, FERMAT_MAX_ITERATIONS);
+    }
+    
+    while (qNotPrime) {
+      q = BigInteger.probablePrime(bitlength, randomNumberGenerator);
+      qNotPrime = checkNotPrime(q, FERMAT_MAX_ITERATIONS);
+    }
+    //Calculate d, n, and phi(r) values
+    BigInteger n = p.multiply(q);
+    BigInteger phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
+    BigInteger e = BigInteger.valueOf(65537); //Low Hamming Weight and Prime
+    BigInteger d = e.modInverse(phi);
+    BigInteger keys[] = new BigInteger[3];
+    keys[0] = n;
+    keys[1] = e;
+    keys[2] = d;
+    return keys;   
+  }
+
+  /*
+   * Checks if a number is NOT prime using Fermat's Theorum. 
+   * @param n             BigInteger to be tested for primality
+   * @param maxIterations the maximum number of iterations to test
+   * @return false        if the number is prime, else true
+   */ 
+  private boolean checkNotPrime(BigInteger n, int maxIterations) {
+    if (n.equals(BigInteger.ONE)) {
+            return true;
+    }
+        for (int i = 0; i < maxIterations; i++)
+        {
+            BigInteger a = getRandomFermatBase(n);
+            a = a.modPow(n.subtract(BigInteger.ONE), n);
+
+            if (!a.equals(BigInteger.ONE)) {
+                return true;
+            }
+        }
+
+        return false;  
+  }
+    /**
+     * Uses rejection method to select a fermat base that satisfies 1 <= a < n
+     * @param   n BigInteger maximum for base a
+     * @returns a A Fermat base that satisfies 1 <= a < n
+     */ 
+    private BigInteger getRandomFermatBase(BigInteger n) {
+      while (true) {
+            final BigInteger a = new BigInteger (n.bitLength(), randomNumberGenerator);
+            // must have 1 <= a < n
+            if (BigInteger.ONE.compareTo(a) <= 0 && a.compareTo(n) < 0)
+            {
+                return a;
+            }
+        }
+  }
+  
+}

@@ -1,0 +1,21 @@
+/**
+ * Auto Generated Java Class.
+ */
+import java.math.BigInteger;
+
+public class PrimeCheckerTest {
+  
+  
+  public static void main(String[] args) { 
+    RSAKeyGenerator keygen = new RSAKeyGenerator();
+    if (keygen.checkPrime(new BigInteger("7918"), 20)) {
+      System.out.println("Unit Test passed!");
+    }
+    else {
+      System.out.println("Unit Test failed.");
+  }
+  
+  /* ADD YOUR CODE HERE */
+  
+}
+}
