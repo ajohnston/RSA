@@ -36,7 +36,7 @@ public class MainWindow extends javax.swing.JFrame {
     static RSAWrapper encrypt = new RSAWrapper();
     final JFileChooser fc = new JFileChooser();
     FileNameExtensionFilter txtFilter = new FileNameExtensionFilter("Text Files", "txt");
-    FileNameExtensionFilter rsaFilter = new FileNameExtensionFilter("RSA Files", "rsa");
+    FileNameExtensionFilter rsaFilter = new FileNameExtensionFilter("RSA Files", "enc");
     FileNameExtensionFilter keyFilter  = new FileNameExtensionFilter("RSA Key Files", "xml");
     /**
      * Creates new form MainWindow
@@ -439,9 +439,15 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void menuExportKeysActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuExportKeysActionPerformed
         XMLHelper writer = new XMLHelper(encrypt);
-        int returnVal = fc.showOpenDialog(MainWindow.this);
+        JFileChooser saveFileChooser = fc;
+        saveFileChooser.setSelectedFile(new File("keys.xml"));
+        int returnVal = saveFileChooser.showSaveDialog(MainWindow.this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File saveFile = fc.getSelectedFile();
+            File saveFile = saveFileChooser.getSelectedFile();
+            if (!saveFile.getAbsolutePath().endsWith(".xml")) {
+                File newFile = new File(saveFile.getAbsolutePath() + ".xml");
+                saveFile = newFile;
+            }
             writer.writeXMLFile(saveFile);
             JOptionPane.showMessageDialog(null,"Exported to file " + saveFile.toString(),"Exported Keys",JOptionPane.WARNING_MESSAGE);
             return;
